@@ -64,10 +64,9 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	*/
 
 	if function == "write" {
-        return t.Init(stub, "write", args)
-    } 
+        return t.write(stub, args)
 	
-	
+	}
 	
 	
 	
@@ -163,7 +162,7 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	batata1 = args[i]
 	ba, err = stub.GetState(batata1)
 	if err != nil {
-		return nil, errors.New("Error bi sater la3in") //hayde 3chen iza taj l setting byitl3
+		return nil, errors.New("Error bi sater la3in") 
 	}
 	result[i] = fmt.Sprintf("%s", ba)
 	
