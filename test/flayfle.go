@@ -63,15 +63,10 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	
 	*/
 
-	if function == "write" {
-        return t.Init(stub, "write", args)
-    } 
 	
 	
 	
 	
-	
-	/*
     // Handle different functions
     if function == "init" {
         return t.Init(stub, "init", args)
@@ -80,7 +75,7 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
     }
     fmt.Println("invoke did not find func: " + function)
 
-	*/
+	
 	
 	
     return nil, errors.New("Received unknown function invocation: " + function)
@@ -163,7 +158,7 @@ func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) 
 	batata1 = args[i]
 	ba, err = stub.GetState(batata1)
 	if err != nil {
-		return nil, errors.New("Error bi sater la3in") //hayde 3chen iza taj l setting byitl3
+		return nil, errors.New("Error bi sater la3in") 
 	}
 	result[i] = fmt.Sprintf("%s", ba)
 	
