@@ -65,20 +65,20 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	//func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
+	var key, value string
 	
 	if len(args) % 2 == 0 {
 		return nil, errors.New("The key and the values are not both present")
 	}
 	
 	
-	for i := 0; i < len(args); i++ { //ana 3m b22t3 3l variablet b2ra kl mara l key mn b3do l value tb3o
-	
-	 //arg[i] = key    --- arg[i+1] == value  (momkin ysir error fa byitsayav bl err 
-	//putstate chkla putstate (string  , table byte) lhek 7awalna mn string la byte[] 3n tri2 []byte()
-	err = stub.PutState(args[i], []byte(args[i+1]))
+	for i := 0; i < len(args); i++ { 
+	key = args[i]                            //rename for fun
+	value = args[i+1]
+	err = stub.PutState(key, []byte(value))
 
 	if err != nil {
-		return nil, errors.New("Error in setting value in the key") //hayde 3chen iza taj l setting byitl3
+		return nil, errors.New("Error in setting value in the key") 
 	}
 	i++
 	}
