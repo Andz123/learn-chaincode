@@ -33,7 +33,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
 
-    err := stub.PutState("hello_world", []byte(args[0]))  // 7att hello word bi aleb args 0  la tkun hiye el key lli 3am mnesta3mela bel init la tkun hiye l ases li 3am men 3ayit w nghayir fi
+    err := stub.PutState("hello_world", []byte(args[0]))
     if err != nil {
         return nil, err
     }
@@ -51,22 +51,6 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
 
-	// args hiye tableau de striiiiiiing
-	
-	/*
-	"s":1,
-"t":"2014-07-11T15:26:37Z",
-"q":192,
-"c":1,
-"temp1":23.6,
-"temp2":-273.0
-	
-	*/
-
-	
-	
-	
-	
     // Handle different functions
     if function == "init" {
         return t.Init(stub, "init", args)
@@ -75,12 +59,8 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
     }
     fmt.Println("invoke did not find func: " + function)
 
-	
-	
-	
     return nil, errors.New("Received unknown function invocation: " + function)
 }
-
 
 
 func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
