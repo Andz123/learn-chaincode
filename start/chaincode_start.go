@@ -28,16 +28,26 @@ func main() {
 
 // Init resets all the things
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	if len(args) != 1 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 1")
+	var err error
+	var key, value string
+
+	
+	if len(args) % 2 == 0 {
+		return nil, errors.New("The key and the values are not both present")
 	}
+	
+	
+	for i := 0; i < len(args); i++ { 
+	key = args[i]                            //rename for fun
+	value = args[i+1]
+	err = stub.PutState(key, []byte(value))
 
-    err := stub.PutState("hello_world", []byte(args[0]))
-    if err != nil {
-        return nil, err
-    }
-
-    return nil, nil
+	if err != nil {
+		return nil, errors.New("Error in setting value in the key") 
+	}
+	i++
+	}
+	return nil, nil
 }
 
 
@@ -66,6 +76,7 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
 	//func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
 	var key, value string
+
 	
 	if len(args) % 2 == 0 {
 		return nil, errors.New("The key and the values are not both present")
