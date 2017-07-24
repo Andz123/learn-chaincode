@@ -1,10 +1,21 @@
+/*
+Copyright IBM Corp 2016 All Rights Reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+		 http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package main
 
 import (
 	"errors"
 	"fmt"
-	"strings"
-	//"bytes"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
@@ -28,22 +39,15 @@ func main() {
 
 // Init resets all the things
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	if len(args) % 2 == 0 {
-		return nil, errors.New("The key and the values are not both present")
+	if len(args) != 1 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
-	var err error
-	var key, value string
 
-
-    for i := 0; i < len(args); i++ { 
-	key = args[i]                            //rename for fun
-	value = args[i+1]
-	err = stub.PutState(key, []byte(value))
+    err := stub.PutState("hello_world", []byte(args[0]))
     if err != nil {
         return nil, err
     }
-	i++
-	}
+
     return nil, nil
 }
 
@@ -69,26 +73,21 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 }
 
 
+
 func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	//func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
-	var err error
 	var key, value string
+	var err error
+	fmt.Println("running write()")
 
-	
-	if len(args) % 2 == 0 {
-		return nil, errors.New("The key and the values are not both present")
+	if len(args) != 2 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
 	}
-	
-	
-	for i := 0; i < len(args); i++ { 
-	key = args[i]                            //rename for fun
-	value = args[i+1]
-	err = stub.PutState(key, []byte(value))
 
+	key = args[0]                            //rename for fun
+	value = args[1]
+	err = stub.PutState(key, []byte(value))  //write the variable into the chaincode state
 	if err != nil {
-		return nil, errors.New("Error in setting value in the key") 
-	}
-	i++
+		return nil, err
 	}
 	return nil, nil
 }
@@ -97,7 +96,6 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
 
 // Query is our entry point for queries
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	//func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	fmt.Println("query is running " + function)
 
     // Handle different functions
@@ -109,54 +107,21 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
     return nil, errors.New("Received unknown function query: " + function)
 }
 
-/* 
-func convert( b []byte ) string {
-    s := make([]string,len(b))
-    for i := range b {
-        s[i] = strconv.Itoa(int(b[i]))
-    }
-    return strings.Join(s,",")
-}
 
- */
-
- 
- 
 func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	//func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
-	var num int
- 
-	
-	num = len(args)
-	
-	var result []string
-	var batata1 string
-	var ba []byte
-	
-	result = make([]string, num) 
-	
-	//var Buf bytes.Buffer
-	
-	//var key, jsonResp string
+	var key, jsonResp string
 	var err error
-	
-	
-	
-	for i := 0; i < len(args); i++ { 
-	batata1 = args[i]
-	ba, err = stub.GetState(batata1)
-	if err != nil {
-		return nil, errors.New("Error bi sater la3in") 
-	}
-	result[i] = fmt.Sprintf("%s", ba)
-	
-	}
-	
 
-	var z string
-	z = strings.Join(result, "-")
-	//andrew = fmt.Sprintf("%s", z)
-	 
-    return []byte(z), nil
-	
+    if len(args) != 1 {
+        return nil, errors.New("Incorrect number of arguments. Expecting name of the key to query")
+    }
+
+    key = args[0]
+    valAsbytes, err := stub.GetState(key)
+    if err != nil {
+        jsonResp = "{\"Error\":\"Failed to get state for " + key + "\"}"
+        return nil, errors.New(jsonResp)
+    }
+
+    return valAsbytes, nil
 }
