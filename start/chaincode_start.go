@@ -16,6 +16,8 @@ package main
 import (
 	"errors"
 	"fmt"
+	"strconv"
+
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
@@ -81,14 +83,17 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	
 	var err error
-	
+	//var tes lo
 	/* if len(args) % 2 == 0 {
 		return nil, errors.New("The key and the values are not both present")
 	} */
 	
 	
 	//for i := 0; i < len(args); i++ { 
-	err = stub.PutState(args[0], []byte(args[1]))
+	//err = stub.PutState(args[0], []byte( args[1]))
+	//strconv.Itoa(123)
+	
+	err = stub.PutState(args[0], []byte( strconv.Itoa(len(args))))
 
 	if err != nil {
 		return nil, errors.New("Error in setting value in the key") //hayde 3chen iza taj l setting byitl3
