@@ -21,6 +21,49 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
+// hayde enter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // SimpleChaincode example simple Chaincode implementation
 type SimpleChaincode struct {
 }
@@ -115,7 +158,6 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 
     return nil, errors.New("Received unknown function query: " + function)
 }
-
 
 
 
