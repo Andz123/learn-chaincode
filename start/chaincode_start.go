@@ -79,24 +79,24 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 
 
 func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	var key, value string
+	
 	var err error
-	fmt.Println("running write()")
-
-	if len(args) != 2 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
+	
+	if len(args) % 2 == 0 {
+		return nil, errors.New("The key and the values are not both present")
 	}
+	
+	
+	for i := 0; i < len(args); i++ { 
+	err = stub.PutState(args[i], []byte(args[i+1]))
 
-	key = args[0]                            //rename for fun
-	value = args[1]
-	err = stub.PutState(key, []byte(value))  //write the variable into the chaincode state
 	if err != nil {
-		return nil, err
+		return nil, errors.New("Error in setting value in the key") //hayde 3chen iza taj l setting byitl3
+	}
+	i++
 	}
 	return nil, nil
 }
-
-
 
 // Query is our entry point for queries
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
