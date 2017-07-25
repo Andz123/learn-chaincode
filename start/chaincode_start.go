@@ -1,9 +1,21 @@
+/*
+Copyright IBM Corp 2016 All Rights Reserved.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+		 http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package main
 
 import (
 	"errors"
 	"fmt"
-	"strings"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
@@ -41,6 +53,10 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 
 
 
+
+
+
+
 // Invoke is our entry point to invoke a chaincode function
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
@@ -58,26 +74,20 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 
 
 
-
 func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	
+	var key, value string
 	var err error
-	
-	if len(args) % 2 == 0 {
-		return nil, errors.New("The key and the values are not both present")
-	}
-	
-	
-	for i := 0; i < len(args); i++ { //ana 3m b22t3 3l variablet b2ra kl mara l key mn b3do l value tb3o
-	
-	 //arg[i] = key    --- arg[i+1] == value  (momkin ysir error fa byitsayav bl err 
-	//putstate chkla putstate (string  , table byte) lhek 7awalna mn string la byte[] 3n tri2 []byte()
-	err = stub.PutState(args[i], []byte(args[i+1]))
+	fmt.Println("running write()")
 
-	if err != nil {
-		return nil, errors.New("Error in setting value in the key") //hayde 3chen iza taj l setting byitl3
+	if len(args) != 2 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
 	}
-	i++
+
+	key = args[0]                            //rename for fun
+	value = args[1]
+	err = stub.PutState(key, []byte(value))  //write the variable into the chaincode state
+	if err != nil {
+		return nil, err
 	}
 	return nil, nil
 }
@@ -98,42 +108,20 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 }
 
 
- 
 func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	
-	var num int
- 
-	
-	num = len(args)
-	
-	var result []string
-	var batata1 string
-	var ba []byte
-	
-	result = make([]string, num) 
-	
-	//var Buf bytes.Buffer
-	
-	//var key, jsonResp string
+	var key, jsonResp string
 	var err error
-	
-	
-	
-	for i := 0; i < len(args); i++ { 
-	batata1 = args[i]
-	ba, err = stub.GetState(batata1)
-	if err != nil {
-		return nil, errors.New("Error bi sater la3in") 
-	}
-	result[i] = fmt.Sprintf("%s", ba)
-	
-	}
-	
 
-	var z string
-	z = strings.Join(result, "-")
-	//andrew = fmt.Sprintf("%s", z)
-	 
-    return []byte(z), nil
-	
+    if len(args) != 1 {
+        return nil, errors.New("Incorrect number of arguments. Expecting name of the key to query")
+    }
+
+    key = args[0]
+    valAsbytes, err := stub.GetState(key)
+    if err != nil {
+        jsonResp = "{\"Error\":\"Failed to get state for " + key + "\"}"
+        return nil, errors.New(jsonResp)
+    }
+
+    return valAsbytes, nil
 }
