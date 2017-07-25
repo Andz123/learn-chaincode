@@ -10,14 +10,13 @@ import (
 
 // SimpleChaincode example simple Chaincode implementation
 type SimpleChaincode struct {
-	
 }
 
 // ============================================================================================================================
 // Main
 // ============================================================================================================================
 func main() {
-	var err error
+    err := shim.Start(new(SimpleChaincode))
     if err != nil {
         fmt.Printf("Error starting Simple chaincode: %s", err)
     }
@@ -33,7 +32,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
 
-    err := stub.PutState("a", []byte(args[0]))
+    err := stub.PutState("hello_world", []byte(args[0]))
     if err != nil {
         return nil, err
     }
@@ -51,22 +50,6 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
 
-	// args hiye tableau de striiiiiiing
-	
-	/*
-	"s":1,
-"t":"2014-07-11T15:26:37Z",
-"q":192,
-"c":1,
-"temp1":23.6,
-"temp2":-273.0
-	
-	*/
-
-	
-	
-	
-	
     // Handle different functions
     if function == "init" {
         return t.Init(stub, "init", args)
@@ -75,31 +58,28 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
     }
     fmt.Println("invoke did not find func: " + function)
 
-	
-	
-	
     return nil, errors.New("Received unknown function invocation: " + function)
 }
 
 
-
 func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	
+	//func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
+	var key, value string
+
 	
 	if len(args) % 2 == 0 {
 		return nil, errors.New("The key and the values are not both present")
 	}
 	
 	
-	for i := 0; i < len(args); i++ { //ana 3m b22t3 3l variablet b2ra kl mara l key mn b3do l value tb3o
-	
-	 //arg[i] = key    --- arg[i+1] == value  (momkin ysir error fa byitsayav bl err 
-	//putstate chkla putstate (string  , table byte) lhek 7awalna mn string la byte[] 3n tri2 []byte()
-	err = stub.PutState(args[i], []byte(args[i+1]))
+	for i := 0; i < len(args); i++ { 
+	key = args[i]                            //rename for fun
+	value = args[i+1]
+	err = stub.PutState(key, []byte(value))
 
 	if err != nil {
-		return nil, errors.New("Error in setting value in the key") //hayde 3chen iza taj l setting byitl3
+		return nil, errors.New("Error in setting value in the key") 
 	}
 	i++
 	}
@@ -110,6 +90,7 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
 
 // Query is our entry point for queries
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+	//func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	fmt.Println("query is running " + function)
 
     // Handle different functions
@@ -135,7 +116,7 @@ func convert( b []byte ) string {
  
  
 func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	
+	//func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var num int
  
 	
