@@ -87,14 +87,14 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
 	} */
 	
 	
-	for i := 0; i < len(args); i++ { 
-	err = stub.PutState(args[i], []byte(args[i+1]))
+	//for i := 0; i < len(args); i++ { 
+	err = stub.PutState(args[0], []byte(args[1]))
 
 	if err != nil {
 		return nil, errors.New("Error in setting value in the key") //hayde 3chen iza taj l setting byitl3
 	}
-	i++
-	}
+	//i++
+	//}
 	return nil, nil
 }
 
