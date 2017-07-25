@@ -29,21 +29,16 @@ func main() {
 
 // Init resets all the things
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	 err := stub.PutState("a", []byte(args[0]))
-	//err1 := stub.PutState("b", []byte(args[0]))
-	
-	//if len(args) != 1 {
-	//	return nil, errors.New("Incorrect number of arguments. Expecting 1")
-	//}
+	if len(args) != 1 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 1")
+	}
 
-   // err := stub.PutState("hello_world", []byte(args[0]))  // 7att hello word bi aleb args 0  la tkun hiye el key lli 3am mnesta3mela bel init la tkun hiye l ases li 3am men 3ayit w nghayir fi
-  if err != nil {
-       return nil, err
+    err := stub.PutState("a", []byte(args[0]))
+    if err != nil {
+        return nil, err
     }
-//if err1 != nil {
-//       return nil, err1
-//    }
-   return nil, nil
+
+    return nil, nil
 }
 
 
