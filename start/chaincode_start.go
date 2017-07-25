@@ -82,9 +82,9 @@ func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string)
 	
 	var err error
 	
-	if len(args) % 2 == 0 {
+	/* if len(args) % 2 == 0 {
 		return nil, errors.New("The key and the values are not both present")
-	}
+	} */
 	
 	
 	for i := 0; i < len(args); i++ { 
