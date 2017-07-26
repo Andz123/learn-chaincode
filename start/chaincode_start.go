@@ -16,53 +16,8 @@ package main
 import (
 	"errors"
 	"fmt"
-	"strconv"
-
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
-
-// hayde enter
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // SimpleChaincode example simple Chaincode implementation
 type SimpleChaincode struct {
@@ -84,17 +39,13 @@ func main() {
 
 // Init resets all the things
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	//if len(args) != 1 {
-	//	return nil, errors.New("Incorrect number of arguments. Expecting 1")
-	//}
+	if len(args) != 1 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 1")
+	}
 
-    err := stub.PutState("a_a", []byte(args[0]))
+    err := stub.PutState("hello_world", []byte(args[0]))
     if err != nil {
         return nil, err
-    }
-  err1 := stub.PutState("b_b", []byte(args[1]))
-    if err1 != nil {
-        return nil, err1
     }
 
     return nil, nil
@@ -124,27 +75,24 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 
 
 func (t *SimpleChaincode) write(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	
+	var key, value string
 	var err error
-	//var tes lo
-	/* if len(args) % 2 == 0 {
-		return nil, errors.New("The key and the values are not both present")
-	} */
-	
-	
-	//for i := 0; i < len(args); i++ { 
-	//err = stub.PutState(args[0], []byte( args[1]))
-	//strconv.Itoa(123)
-	
-	err = stub.PutState(args[0], []byte( strconv.Itoa(len(args))))
+	fmt.Println("running write()")
 
-	if err != nil {
-		return nil, errors.New("Error in setting value in the key") //hayde 3chen iza taj l setting byitl3
+	if len(args) != 2 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
 	}
-	//i++
-	//}
+
+	key = args[0]                            //rename for fun
+	value = args[1]
+	err = stub.PutState(key, []byte(value))  //write the variable into the chaincode state
+	if err != nil {
+		return nil, err
+	}
 	return nil, nil
 }
+
+
 
 // Query is our entry point for queries
 func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
@@ -160,12 +108,9 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 }
 
 
-
-
 func (t *SimpleChaincode) read(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	var key, jsonResp string
 	var err error
-
 
     if len(args) != 1 {
         return nil, errors.New("Incorrect number of arguments. Expecting name of the key to query")
